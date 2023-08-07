@@ -66,27 +66,6 @@ public class KitchenController {
                 : ResponseEntity.ok(new OrderStatus(id, status));
     }
 
-    @GetMapping("/orders")
-    public ResponseEntity<List<Order>> getAllOrders(
-            @RequestParam(name = "location", required = false) String location) {
-
-        List<Order> orders;
-
-        if (Objects.nonNull(location))
-            orders = jdbcTemplate.query(
-                    "SELECT * FROM pizza_order WHERE location = ?::store_location",
-                    (prepStmt) -> {
-                        prepStmt.setString(1, location);
-                    },
-                    new OrderRowMapper());
-        else
-            orders = jdbcTemplate.query(
-                    "SELECT * FROM pizza_order",
-                    new OrderRowMapper());
-
-        return ResponseEntity.ok(orders);
-    }
-
     @GetMapping("/order")
     public ResponseEntity<Object> getOrder(
             @RequestParam("id") int id,

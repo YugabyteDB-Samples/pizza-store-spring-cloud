@@ -11,6 +11,8 @@ services:
     build: ./kitchen
     depends_on:
       - discovery-server
+    ports:
+      - "8081:8081"
     environment:
       - DISCOVERY_SERVER_HOST=discovery-server
       - DISCOVERY_SERVER_PORT=8761
@@ -23,6 +25,8 @@ services:
     build: ./tracker
     depends_on:
       - discovery-server
+    ports:
+      - "8082:8082"
     environment:
       - DISCOVERY_SERVER_HOST=discovery-server
       - DISCOVERY_SERVER_PORT=8761

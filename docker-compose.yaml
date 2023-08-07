@@ -11,8 +11,6 @@ services:
     build: ./kitchen
     depends_on:
       - discovery-server
-      - yb-master-1
-      - yb-tserver-1
     environment:
       - DISCOVERY_SERVER_HOST=discovery-server
       - DISCOVERY_SERVER_PORT=8761

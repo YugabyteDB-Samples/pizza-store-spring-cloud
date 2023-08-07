@@ -1,9 +1,5 @@
 version: '3.9'
 services:
-  # config-server:
-  #   image: config-server:latest
-  #   build: ./config-server
-
   discovery-server:
     image: discovery-server:latest
     build: ./discovery-server
@@ -14,44 +10,35 @@ services:
     image: kitchen-service:latest
     build: ./kitchen
     depends_on:
-      # - config-server
       - discovery-server
       - yb-master-1
       - yb-tserver-1
     environment:
-      # - CONFIG_SERVER_HOST=config-server
-      # - CONFIG_SERVER_PORT=8888
       - DISCOVERY_SERVER_HOST=discovery-server
       - DISCOVERY_SERVER_PORT=8761
-      - DB_URL=jdbc:postgresql://host.docker.internal:5433/yugabyte
-      - DB_USER=yugabyte
-      - DB_PASSWORD=yugabyte
+      - DB_URL=${DB_URL:-jdbc:postgresql://host.docker.internal:5433/yugabyte}
+      - DB_USER=${DB_USER:-yugabyte}
+      - DB_PASSWORD=${DB_PASSWORD:-yugabyte}
       
   tracker-service:
     image: tracker-service:latest
     build: ./tracker
     depends_on:
-      # - config-server
       - discovery-server
     environment:
-      # - CONFIG_SERVER_HOST=config-server
-      # - CONFIG_SERVER_PORT=8888
       - DISCOVERY_SERVER_HOST=discovery-server
       - DISCOVERY_SERVER_PORT=8761
-      - DB_URL=jdbc:postgresql://host.docker.internal:5433/yugabyte
-      - DB_USER=yugabyte
-      - DB_PASSWORD=yugabyte
+      - DB_URL=${DB_URL:-jdbc:postgresql://host.docker.internal:5433/yugabyte}
+      - DB_USER=${DB_USER:-yugabyte}
+      - DB_PASSWORD=${DB_PASSWORD:-yugabyte}
     
   api-gateway:
     image: api-gateway:latest
     build: ./api-gateway
     depends_on:
-      # - config-server
       - discovery-server
     ports:
       - "8080:8080"
     environment:
-      # - CONFIG_SERVER_HOST=config-server
-      # - CONFIG_SERVER_PORT=8888
       - DISCOVERY_SERVER_HOST=discovery-server
       - DISCOVERY_SERVER_PORT=8761  

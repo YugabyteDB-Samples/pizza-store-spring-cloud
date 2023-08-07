@@ -33,7 +33,12 @@ http GET localhost:8080/kitchen/order id==1
 
 ## Docker
 
-Start in Docker:
+Start in Docker and buld the image:
 ```shell
 docker-compose up --build
+```
+
+or just start in Docker if you already have an image:
+```shell
+docker-compose up
 ```

@@ -33,6 +33,7 @@ services:
       - DB_URL=${DB_URL:-jdbc:postgresql://host.docker.internal:5433/yugabyte}
       - DB_USER=${DB_USER:-yugabyte}
       - DB_PASSWORD=${DB_PASSWORD:-yugabyte}
+      - DB_CONN_INIT_SQL=${DB_CONN_INIT_SQL:-}
     
   api-gateway:
     image: api-gateway:latest

@@ -6,8 +6,7 @@ The project comes with two microservices that support various REST API endpoints
 1. The Kitchen service (see the `kitchen` directory) - allows customers to order pizza.
 2. The Tracker service (see the `tracker` directory) - lets customers check their order status.
 
-
-![pizza_store_spring_cloud_v2](https://github.com/YugabyteDB-Samples/pizza-store-spring-cloud/assets/1537233/21d77111-41cf-4f11-9d2c-b1a3f32c4289)
+![pizza_store_spring_cloud_v2](https://github.com/YugabyteDB-Samples/pizza-store-spring-cloud/assets/1537233/c725688d-6b58-49ca-861d-8048cdbdd0b2)
 
 Both microservices register with the [Spring Discovery Service](https://spring.io/projects/spring-cloud-netflix)(aka. Spring Cloud Netflix). This allows all the registered services to connect and communicate with each other directly using only their names.
 

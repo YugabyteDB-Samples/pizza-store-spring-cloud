@@ -94,7 +94,7 @@ Requests to the Kitchen microservice:
     where:
     * `ID` - an order id.
     * `STATUS` - one of the following - `Ordered`, `Baking`, `Delivering` and `YummyInMyTummy`.
-    * `LOCATION`(optional) - use for geo-partitioned deployments to avoid global transactions. Accepts one of the following - `NewYork`, `Berlin` and `Sydney`.
+    * `LOCATION`(optional) - used for geo-partitioned deployments to avoid global transactions. Accepts one of the following - `NewYork`, `Berlin`, and `Sydney`.
     
 * Delete all orders:
     ```shell
@@ -107,9 +107,9 @@ Requests to the Tracker microservice:
     http GET localhost:8080/tracker/order id=={ID} [location=={LOCATION}]
     ```
     * `ID` - an order id.
-    * `LOCATION`(optional) - use for geo-partitioned deployments to avoid global transactions. Accepts one of the following - `NewYork`, `Berlin` and `Sydney`.
+    * `LOCATION`(optional) - used for geo-partitioned deployments to avoid global transactions. Accepts one of the following - `NewYork`, `Berlin`, and `Sydney`.
 * Get all orders status:
     ```shell
     http GET localhost:8080/tracker/orders [location=={LOCATION}]
     ```
-    * `LOCATION`(optional) - use for geo-partitioned deployments to avoid global transactions. Accepts one of the following - `NewYork`, `Berlin` and `Sydney`.
+    * `LOCATION`(optional) - used for geo-partitioned deployments to avoid global transactions. Accepts one of the following - `NewYork`, `Berlin`, and `Sydney`.

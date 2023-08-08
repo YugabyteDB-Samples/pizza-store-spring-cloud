@@ -1,16 +1,18 @@
 # Pizza Store With Spring Cloud and YugabyteDB
 
-This projects provides a functional skeleton for a pizza store implemented with the Spring Cloud framework and YugabyteDB.
+This project provides a functional skeleton for a pizza store implemented with the Spring Cloud framework and YugabyteDB.
 
 The project comes with two microservices that support various REST API endpoints for client requests:
 1. The Kitchen service (see the `kitchen` directory) - allows customers to place pizza orders.
 2. The Tracker service (see the `tracker` directory) - lets customers check their order status.
 
-Both microservices register with the [Spring Discovery Service](https://spring.io/projects/spring-cloud-netflix)(aka. Spring Cloud Netflix). This allows all the registered services to connect and communicate to each other directly using only their names.
+![pizza_store_spring_cloud](https://github.com/YugabyteDB-Samples/pizza-store-spring-cloud/assets/1537233/0bb445c6-7ff3-4da3-ae7a-d4247cbf0a15)
 
-The client interacts with the microservices via [Spring Cloud Gateway](https://spring.io/projects/spring-cloud-gateway). The gateway resolves user requests and forwards them to respective services following the provided routes configuration. The gateway registers with the Discovery Service as well to benefit from the automatic discovery of the registered Kitchen and Tracker services.
+Both microservices register with the [Spring Discovery Service](https://spring.io/projects/spring-cloud-netflix)(aka. Spring Cloud Netflix). This allows all the registered services to connect and communicate with each other directly using only their names.
 
-YugabyteDB is used as a database that can scale horizontally, withstand various outages, and pin pizza orders to required locations. The application supports stretched and geo-partitioned YugabyteDB clusters.
+The client interacts with the microservices via [Spring Cloud Gateway](https://spring.io/projects/spring-cloud-gateway). Following the provided routes configuration, the gateway resolves user requests and forwards them to respective services. The gateway also registers with the Discovery Service to benefit from the automatic discovery of the registered Kitchen and Tracker services.
+
+YugabyteDB is a database that can scale horizontally, withstand various outages, and pin pizza orders to required locations. The application supports stretched and geo-partitioned YugabyteDB clusters.
 
 # Local Deployment
 

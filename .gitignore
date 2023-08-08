@@ -23,4 +23,7 @@
 hs_err_pid*
 replay_pid*
 .vscode/settings.json
+
+# other directories
 .DS_Store
+scripts

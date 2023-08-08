@@ -1,6 +1,8 @@
 package com.pizza.tracker;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,8 @@ public class TrackerController {
             @RequestParam(name = "location", required = false) String location) {
         List<Order> orders;
 
+        long startTime = System.currentTimeMillis();
+
         if (Objects.nonNull(location))
             orders = jdbcTemplate.query(
                     "SELECT * FROM pizza_order WHERE id = ? and location = ?::store_location",
@@ -38,14 +42,18 @@ public class TrackerController {
                     },
                     new OrderRowMapper());
 
+        long execTime = System.currentTimeMillis() - startTime;
+
         return orders.size() == 0
-                ? new ResponseEntity<>("Order is not found", HttpStatus.NOT_FOUND)
-                : ResponseEntity.ok(orders.get(0));
+                ? new ResponseEntity<>(generateResponse(execTime, "Order is not found"), HttpStatus.NOT_FOUND)
+                : ResponseEntity.ok(generateResponse(execTime, orders.get(0)));
     }
 
     @GetMapping("/orders")
-    public ResponseEntity<List<Order>> getAllOrdersStatus(
+    public ResponseEntity<Object> getAllOrdersStatus(
             @RequestParam(name = "location", required = false) String location) {
+
+        long startTime = System.currentTimeMillis();
 
         List<Order> orders;
 
@@ -61,6 +69,17 @@ public class TrackerController {
                     "SELECT * FROM pizza_order",
                     new OrderRowMapper());
 
-        return ResponseEntity.ok(orders);
+        long execTime = System.currentTimeMillis() - startTime;
+
+        return ResponseEntity.ok(generateResponse(execTime, orders));
+    }
+
+    private static Map<String, Object> generateResponse(long execTime, Object response) {
+        Map<String, Object> result = new HashMap<>();
+
+        result.put("result: ", response);
+        result.put("db latency", String.format("%.3f", (float) execTime / 1000) + "s");
+
+        return result;
     }
 }

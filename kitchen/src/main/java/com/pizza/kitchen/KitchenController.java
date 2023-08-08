@@ -2,7 +2,9 @@ package com.pizza.kitchen;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +25,11 @@ public class KitchenController {
     private JdbcTemplate jdbcTemplate;
 
     @PostMapping("/order")
-    public ResponseEntity<Order> addNewOrder(
+    public ResponseEntity<Object> addNewOrder(
             @RequestParam("id") int id,
             @RequestParam("location") String location) {
+
+        long startTime = System.currentTimeMillis();
 
         Timestamp orderTime = Timestamp.from(Instant.now());
 
@@ -36,7 +40,9 @@ public class KitchenController {
                     prepStmt.setTimestamp(3, Timestamp.from(Instant.now()));
                 });
 
-        return ResponseEntity.ok(new Order(id, "Ordered", location, orderTime));
+        long execTime = System.currentTimeMillis() - startTime;
+
+        return ResponseEntity.ok(generateResponse(execTime, new Order(id, "Ordered", location, orderTime)));
     }
 
     @PutMapping("/order")
@@ -44,6 +50,8 @@ public class KitchenController {
             @RequestParam("id") int id,
             @RequestParam("status") String status,
             @RequestParam(name = "location", required = false) String location) {
+
+        long startTime = System.currentTimeMillis();
 
         int updatedRows = 0;
 
@@ -62,15 +70,19 @@ public class KitchenController {
                         prepStmt.setObject(2, id);
                     });
 
+        long execTime = System.currentTimeMillis() - startTime;
+
         return updatedRows == 0
-                ? new ResponseEntity<>("Order is not found", HttpStatus.NOT_FOUND)
-                : ResponseEntity.ok(new OrderStatus(id, status));
+                ? new ResponseEntity<>(generateResponse(execTime, "Order is not found"), HttpStatus.NOT_FOUND)
+                : ResponseEntity.ok(generateResponse(execTime, new OrderStatus(id, status)));
     }
 
     @GetMapping("/order")
     public ResponseEntity<Object> getOrder(
             @RequestParam("id") int id,
             @RequestParam(name = "location", required = false) String location) {
+
+        long startTime = System.currentTimeMillis();
 
         List<Order> orders;
 
@@ -90,15 +102,30 @@ public class KitchenController {
                     },
                     new OrderRowMapper());
 
+        long execTime = System.currentTimeMillis() - startTime;
+
         return orders.size() == 0
-                ? new ResponseEntity<>("Order is not found", HttpStatus.NOT_FOUND)
-                : ResponseEntity.ok(orders.get(0));
+                ? new ResponseEntity<>(generateResponse(execTime, "Order is not found"), HttpStatus.NOT_FOUND)
+                : ResponseEntity.ok(generateResponse(execTime, orders.get(0)));
     }
 
     @DeleteMapping("/orders")
     public ResponseEntity<Object> deleteOrders() {
+        long startTime = System.currentTimeMillis();
+
         jdbcTemplate.execute("TRUNCATE pizza_order");
 
-        return ResponseEntity.ok("Orders have been deleted");
+        long execTime = System.currentTimeMillis() - startTime;
+
+        return ResponseEntity.ok(generateResponse(execTime, "Orders have been deleted"));
+    }
+
+    private static Map<String, Object> generateResponse(long execTime, Object response) {
+        Map<String, Object> result = new HashMap<>();
+
+        result.put("result: ", response);
+        result.put("db latency", String.format("%.3f", (float) execTime / 1000) + "s");
+
+        return result;
     }
 }

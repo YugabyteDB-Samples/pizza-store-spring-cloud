@@ -3,7 +3,7 @@
 This project provides a functional skeleton for a pizza store implemented with the Spring Cloud framework and YugabyteDB.
 
 The project comes with two microservices that support various REST API endpoints for client requests:
-1. The Kitchen service (see the `kitchen` directory) - allows customers to place pizza orders.
+1. The Kitchen service (see the `kitchen` directory) - allows customers to order pizza.
 2. The Tracker service (see the `tracker` directory) - lets customers check their order status.
 
 ![pizza_store_spring_cloud_v2](https://github.com/YugabyteDB-Samples/pizza-store-spring-cloud/assets/1537233/21d77111-41cf-4f11-9d2c-b1a3f32c4289)
@@ -23,7 +23,7 @@ Configure the following environment variables that are used in the `docker-compo
 * `DB_USER` - a user name to connect with.
 * `DB_PASSWORD` - the password.
 
-If you run a YugabyteDB instance on a local machine and the instance accessible via `localhost`, then you don't need to configure the settings above.
+If you run a YugabyteDB instance on a local machine and the instance is accessible via `localhost`, then you don't need to configure the settings above.
 
 ### Creating Standard Schema
 
@@ -31,7 +31,7 @@ Use contents of the `schema/pizza_store.sql` script to create tables and other d
 
 ### Creating Geo-Partitioned Schema
 
-If you'd like to use a geo-partitioned YugabyteDB cluster, then the pizza store can pin orders to locations across the United States, Europe and Australia. Presently, the app supports the following locations - `NewYork`, `Berlin` and `Sydney`.
+If you'd like to use a geo-partitioned YugabyteDB cluster, then the pizza store can pin orders to locations across the United States, Europe, and Australia. Presently, the app supports the following locations - `NewYork`, `Berlin` and `Sydney`.
 
 You can start a [geo-partitioned cluster using YugabyteDB Managed](https://docs.yugabyte.com/preview/yugabyte-cloud/cloud-basics/create-clusters/create-clusters-geopartition/). The geo-partitioned schema (see `schema/pizza_store_geo_distributed.sql`) is pre-configured for Google Cloud Platform (`gcp`) and the following regions - `us-east4`, `europe-west3` and `australia-southeast1`. You either need to start a YugabyteDB Managed instance with the same configuration or adjust the application schema file with your cloud provider and regions.
 
@@ -59,7 +59,7 @@ sudo ifconfig lo0 alias 127.0.0.3
 ./yugabyted configure data_placement --fault_tolerance=region --base_dir=$HOME/yugabyte/node1
 ```
 
-Once the cluster is ready, use the contents of the `schema/pizza_store_geo_distributed.sql` script to create tables and other database objects used by the application.
+Once the cluster is ready, use the contents of the `schema/pizza_store_geo_distributed.sql` script to create tables and other database objects the application uses.
 
 # Starting Application
 

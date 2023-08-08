@@ -61,7 +61,7 @@ sudo ifconfig lo0 alias 127.0.0.3
 
 Once the cluster is ready, use the contents of the `schema/pizza_store_geo_distributed.sql` script to create tables and other database objects the application uses.
 
-# Starting Application
+## Starting Application
 
 The application conveniently starts in containers using Docker Compose.
 
@@ -74,31 +74,42 @@ The application conveniently starts in containers using Docker Compose.
 2. Confirm there are no errors in the logs and open the Discovery Service dashboard (`localhost:8761`) to make sure all the services have been registered:
     ![spring_discovery_service](https://github.com/YugabyteDB-Samples/pizza-store-spring-cloud/assets/1537233/ad596515-6e6d-47ea-9559-b09995697d73)
 
+## Sending Requests Via Cloud Gateway
 
-Kitchen service commands:
-```shell
-# Add new order
-http POST localhost:8081/order id==1 location==Sydney
+Now you can use the [HTTPie tool](https://httpie.io) to send REST requests via the running Spring Cloud Gateway Instance. The gateway routes are configured in the `api-gateway/.../ApiGatewayApplication.java` file. 
 
-# Update order status
-http PUT localhost:8081/order id==1 status==Baking
+Requests to the Kitchen microservice:
+* Put new pizza orders in:
+    ```shell
+    http POST localhost:8080/kitchen/order id=={ID} location=={LOCATION}
+    ```
+    where:
+    * `ID` - an order integer id.
+    * `LOCATION` - one of the following - `NewYork`, `Berlin` and `Sydney`
 
-# Get all orders
-http GET localhost:8081/orders
-http GET localhost:8081/orders location==Sydney
+* Update order status:
+    ```shell
+    http PUT localhost:8080/kitchen/order id=={ID} status=={STATUS} [location=={LOCATION}]
+    ```
+    where:
+    * `ID` - an order id.
+    * `STATUS` - one of the following - `Ordered`, `Baking`, `Delivering` and `YummyInMyTummy`.
+    * `LOCATION`(optional) - use for geo-partitioned deployments to avoid global transactions. Accepts one of the following - `NewYork`, `Berlin` and `Sydney`.
+    
+* Delete all orders:
+    ```shell
+    http DELETE localhost:8080/kitchen/orders
+    ```
 
-# Get a specific order
-http GET localhost:8081/order id==1
-http GET localhost:8081/order id==1 location==Sydney
-```
-
-Tracker service commands:
-```shell
-http GET localhost:8082/status id==1
-```
-
-Requests through the Spring Cloud Gateway:
-```shell
-http GET localhost:8080/tracker/status id==1
-http GET localhost:8080/kitchen/order id==1
-```
+Requests to the Tracker microservice:
+* Get an order status:
+    ```shell
+    http GET localhost:8080/tracker/order id=={ID} [location=={LOCATION}]
+    ```
+    * `ID` - an order id.
+    * `LOCATION`(optional) - use for geo-partitioned deployments to avoid global transactions. Accepts one of the following - `NewYork`, `Berlin` and `Sydney`.
+* Get all orders status:
+    ```shell
+    http GET localhost:8080/tracker/orders [location=={LOCATION}]
+    ```
+    * `LOCATION`(optional) - use for geo-partitioned deployments to avoid global transactions. Accepts one of the following - `NewYork`, `Berlin` and `Sydney`.

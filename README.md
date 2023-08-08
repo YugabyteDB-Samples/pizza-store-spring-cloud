@@ -6,7 +6,7 @@ The project comes with two microservices that support various REST API endpoints
 1. The Kitchen service (see the `kitchen` directory) - allows customers to order pizza.
 2. The Tracker service (see the `tracker` directory) - lets customers check their order status.
 
-![pizza_store_spring_cloud_v2](https://github.com/YugabyteDB-Samples/pizza-store-spring-cloud/assets/1537233/21d77111-41cf-4f11-9d2c-b1a3f32c4289)
+![pizza_store_spring_cloud_v2](https://github.com/YugabyteDB-Samples/pizza-store-spring-cloud/assets/1537233/c725688d-6b58-49ca-861d-8048cdbdd0b2)
 
 Both microservices register with the [Spring Discovery Service](https://spring.io/projects/spring-cloud-netflix)(aka. Spring Cloud Netflix). This allows all the registered services to connect and communicate with each other directly using only their names.
 
@@ -72,7 +72,7 @@ The application conveniently starts in containers using Docker Compose.
     Note, the `--build` command is needed only during the first start or whenever you update the application source code.
 
 2. Confirm there are no errors in the logs and open the Discovery Service dashboard (`localhost:8761`) to make sure all the services have been registered:
-    ![spring_discovery_service](https://github.com/YugabyteDB-Samples/pizza-store-spring-cloud/assets/1537233/ad596515-6e6d-47ea-9559-b09995697d73)
+    ![spring_discovery_service](https://github.com/YugabyteDB-Samples/pizza-store-spring-cloud/assets/1537233/7d3bd049-07bb-496c-bc2a-82ac3cca71e3)
 
 ## Sending Requests Via Cloud Gateway
 
@@ -94,7 +94,7 @@ Requests to the Kitchen microservice:
     where:
     * `ID` - an order id.
     * `STATUS` - one of the following - `Ordered`, `Baking`, `Delivering` and `YummyInMyTummy`.
-    * `LOCATION`(optional) - use for geo-partitioned deployments to avoid global transactions. Accepts one of the following - `NewYork`, `Berlin` and `Sydney`.
+    * `LOCATION`(optional) - used for geo-partitioned deployments to avoid global transactions. Accepts one of the following - `NewYork`, `Berlin`, and `Sydney`.
     
 * Delete all orders:
     ```shell
@@ -107,9 +107,9 @@ Requests to the Tracker microservice:
     http GET localhost:8080/tracker/order id=={ID} [location=={LOCATION}]
     ```
     * `ID` - an order id.
-    * `LOCATION`(optional) - use for geo-partitioned deployments to avoid global transactions. Accepts one of the following - `NewYork`, `Berlin` and `Sydney`.
+    * `LOCATION`(optional) - used for geo-partitioned deployments to avoid global transactions. Accepts one of the following - `NewYork`, `Berlin`, and `Sydney`.
 * Get all orders status:
     ```shell
     http GET localhost:8080/tracker/orders [location=={LOCATION}]
     ```
-    * `LOCATION`(optional) - use for geo-partitioned deployments to avoid global transactions. Accepts one of the following - `NewYork`, `Berlin` and `Sydney`.
+    * `LOCATION`(optional) - used for geo-partitioned deployments to avoid global transactions. Accepts one of the following - `NewYork`, `Berlin`, and `Sydney`.

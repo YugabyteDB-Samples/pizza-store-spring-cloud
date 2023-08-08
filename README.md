@@ -71,7 +71,8 @@ The application conveniently starts in containers using Docker Compose.
     ```
     Note, the `--build` command is needed only during the first start or whenever you update the application source code.
 
-2. Confrim there are no errors in the logs and open the Discovery Service dashboard (`localhost:8761`) to make sure all the services have been registered:
+2. Confirm there are no errors in the logs and open the Discovery Service dashboard (`localhost:8761`) to make sure all the services have been registered:
+    ![spring_discovery_service](https://github.com/YugabyteDB-Samples/pizza-store-spring-cloud/assets/1537233/ad596515-6e6d-47ea-9559-b09995697d73)
 
 
 Kitchen service commands:

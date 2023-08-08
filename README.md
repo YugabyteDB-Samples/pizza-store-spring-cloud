@@ -14,7 +14,65 @@ The client interacts with the microservices via [Spring Cloud Gateway](https://s
 
 YugabyteDB is a database that can scale horizontally, withstand various outages, and pin pizza orders to required locations. The application supports stretched and geo-partitioned YugabyteDB clusters.
 
-# Local Deployment
+## Starting YugabyteDB
+
+You can use a YugabyteDB deployment option that works best for you. 
+
+Configure the following environment variables that are used in the `docker-compose.yaml` during the start of microservice instances:
+* `DB_URL` - the database connection URL in the `jdbc:postgresql://{HOSTNAME}:5433/yugabyte` format.
+* `DB_USER` - a user name to connect with.
+* `DB_PASSWORD` - the password.
+
+If you run a YugabyteDB instance on a local machine and the instance accessible via `localhost`, then you don't need to configure the settings above.
+
+### Creating Standard Schema
+
+Use contents of the `schema/pizza_store.sql` script to create tables and other database objects used by the application.
+
+### Creating Geo-Partitioned Schema
+
+If you'd like to use a geo-partitioned YugabyteDB cluster, then the pizza store can pin orders to locations across the United States, Europe and Australia. Presently, the app supports the following locations - `NewYork`, `Berlin` and `Sydney`.
+
+You can start a [geo-partitioned cluster using YugabyteDB Managed](https://docs.yugabyte.com/preview/yugabyte-cloud/cloud-basics/create-clusters/create-clusters-geopartition/). The geo-partitioned schema (see `schema/pizza_store_geo_distributed.sql`) is pre-configured for Google Cloud Platform (`gcp`) and the following regions - `us-east4`, `europe-west3` and `australia-southeast1`. You either need to start a YugabyteDB Managed instance with the same configuration or adjust the application schema file with your cloud provider and regions.
+
+Alternatively, you can start the cluster locally using the [yugabyted](https://docs.yugabyte.com/preview/reference/configuration/yugabyted/) tool:
+```shell
+mkdir $HOME/yugabyte
+
+# macOS only (add IPs to the loopback) ----
+sudo ifconfig lo0 alias 127.0.0.2
+sudo ifconfig lo0 alias 127.0.0.3
+# macOS only ----
+
+./yugabyted start --advertise_address=127.0.0.1 --base_dir=$HOME/yugabyte/node1 \
+    --cloud_location=gcp.us-east4.us-east4-a \
+    --fault_tolerance=region
+
+./yugabyted start --advertise_address=127.0.0.2 --join=127.0.0.1 --base_dir=$HOME/yugabyte/node2 \
+    --cloud_location=gcp.europe-west3.europe-west3-a \
+    --fault_tolerance=region
+    
+./yugabyted start --advertise_address=127.0.0.3 --join=127.0.0.1 --base_dir=$HOME/yugabyte/node3 \
+    --cloud_location=gcp.australia-southeast1.australia-southeast1-a \
+    --fault_tolerance=region
+
+./yugabyted configure data_placement --fault_tolerance=region --base_dir=$HOME/yugabyte/node1
+```
+
+Once the cluster is ready, use the contents of the `schema/pizza_store_geo_distributed.sql` script to create tables and other database objects used by the application.
+
+# Starting Application
+
+The application conveniently starts in containers using Docker Compose.
+
+1. Navigate to the root directory of the project and start the app:
+    ```shell
+    docker compose up --build
+    ```
+    Note, the `--build` command is needed only during the first start or whenever you update the application source code.
+
+2. Confrim there are no errors in the logs and open the Discovery Service dashboard (`localhost:8761`) to make sure all the services have been registered:
+
 
 Kitchen service commands:
 ```shell
@@ -42,16 +100,4 @@ Requests through the Spring Cloud Gateway:
 ```shell
 http GET localhost:8080/tracker/status id==1
 http GET localhost:8080/kitchen/order id==1
-```
-
-## Docker
-
-Start in Docker and buld the image:
-```shell
-docker-compose up --build
-```
-
-or just start in Docker if you already have an image:
-```shell
-docker-compose up
 ```

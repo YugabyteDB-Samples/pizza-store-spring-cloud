@@ -7,6 +7,7 @@ CREATE TYPE order_status AS ENUM(
 
 CREATE TYPE store_location AS ENUM(
     'NewYork',
+    'Chicago',
     'Berlin',
     'Sydney'
 );

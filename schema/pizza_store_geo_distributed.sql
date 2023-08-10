@@ -7,6 +7,7 @@ CREATE TYPE order_status AS ENUM(
 
 CREATE TYPE store_location AS ENUM(
     'NewYork',
+    'Chicago',
     'Berlin',
     'Sydney'
 );
@@ -39,7 +40,7 @@ CREATE TABLE pizza_order(
 PARTITION BY LIST (location);
 
 CREATE TABLE pizza_order_usa PARTITION OF pizza_order(id, status, location, order_time, PRIMARY KEY (id, location))
-FOR VALUES IN ('NewYork') TABLESPACE usa_ts;
+FOR VALUES IN ('NewYork', 'Chicago') TABLESPACE usa_ts;
 
 CREATE TABLE pizza_order_europe PARTITION OF pizza_order(id, status, location, order_time, PRIMARY KEY (id, location))
 FOR VALUES IN ('Berlin') TABLESPACE europe_ts;

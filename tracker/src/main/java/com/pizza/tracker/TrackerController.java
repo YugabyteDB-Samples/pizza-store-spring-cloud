@@ -28,7 +28,7 @@ public class TrackerController {
 
         if (Objects.nonNull(location))
             orders = jdbcTemplate.query(
-                    "SELECT * FROM pizza_order WHERE id = ? and location = ?::store_location",
+                    "SELECT id,location,status,order_time FROM pizza_order WHERE id = ? and location = ?::store_location",
                     (prepStmt) -> {
                         prepStmt.setInt(1, id);
                         prepStmt.setString(2, location);
@@ -36,7 +36,7 @@ public class TrackerController {
                     new OrderRowMapper());
         else
             orders = jdbcTemplate.query(
-                    "SELECT * FROM pizza_order WHERE id = ?",
+                    "SELECT id,location,status,order_time FROM pizza_order WHERE id = ?",
                     (prepStmt) -> {
                         prepStmt.setInt(1, id);
                     },
@@ -59,14 +59,14 @@ public class TrackerController {
 
         if (Objects.nonNull(location))
             orders = jdbcTemplate.query(
-                    "SELECT * FROM pizza_order WHERE location = ?::store_location",
+                    "SELECT id,location,status,order_time FROM pizza_order WHERE location = ?::store_location",
                     (prepStmt) -> {
                         prepStmt.setString(1, location);
                     },
                     new OrderRowMapper());
         else
             orders = jdbcTemplate.query(
-                    "SELECT * FROM pizza_order",
+                    "SELECT id,location,status,order_time FROM pizza_order",
                     new OrderRowMapper());
 
         long execTime = System.currentTimeMillis() - startTime;

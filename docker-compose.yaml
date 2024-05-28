@@ -16,9 +16,9 @@ services:
     environment:
       - DISCOVERY_SERVER_HOST=discovery-server
       - DISCOVERY_SERVER_PORT=8761
-      - DB_URL=${DB_URL:-jdbc:postgresql://postgresql:5432/postgres}
-      - DB_USER=${DB_USER:-postgres}
-      - DB_PASSWORD=${DB_PASSWORD:-password}
+      - DB_URL=${DB_URL:-jdbc:postgresql://host.docker.internal:5433/yugabyte}
+      - DB_USER=${DB_USER:-yugabyte}
+      - DB_PASSWORD=${DB_PASSWORD:-yugabyte}
       
   tracker-service:
     image: tracker-service:latest
@@ -30,9 +30,9 @@ services:
     environment:
       - DISCOVERY_SERVER_HOST=discovery-server
       - DISCOVERY_SERVER_PORT=8761
-      - DB_URL=${DB_URL:-jdbc:postgresql://postgresql:5432/postgres}
-      - DB_USER=${DB_USER:-postgres}
-      - DB_PASSWORD=${DB_PASSWORD:-password}
+      - DB_URL=${DB_URL:-jdbc:postgresql://host.docker.internal:5433/yugabyte}
+      - DB_USER=${DB_USER:-yugabyte}
+      - DB_PASSWORD=${DB_PASSWORD:-yugabyte}
       - DB_CONN_INIT_SQL=${DB_CONN_INIT_SQL:-}
     
   api-gateway:
@@ -44,9 +44,4 @@ services:
       - "8080:8080"
     environment:
       - DISCOVERY_SERVER_HOST=discovery-server
-      - DISCOVERY_SERVER_PORT=8761  
-
-networks:
-  default:
-    external:
-      name: pizza-network
+      - DISCOVERY_SERVER_PORT=8761

@@ -68,28 +68,6 @@ Once the cluster is ready, use the contents of the `schema/pizza_store_geo_distr
 
 The application conveniently starts in containers using Docker Compose.
 
-If you don't have any particular database instance for testing, then start Postgres in docker. By default, the application connects an instance of Postgres running in docker (see the `docker-compose.yaml`):
-
-```shell
-docker network create pizza-network
-
-rm -R ~/postgresql_data/
-mkdir ~/postgresql_data/
-
-docker run --name postgresql --net pizza-network \
-    -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=password \
-    -p 5432:5432 \
-    -v ~/postgresql_data/:/var/lib/postgresql/data -d postgres:latest
-```
-
-and load the schema:
-
-```shell
-psql -h 127.0.0.1 -U postgres -f {PATH_TO_PROJECT}/pizza-store-spring-cloud/schema/pizza_store.sql
-```
-
-Start the application:
-
 1. Navigate to the root directory of the project and start the app:
 
     ```shell

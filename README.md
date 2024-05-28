@@ -3,6 +3,7 @@
 This project provides a functional skeleton for a pizza store implemented with the Spring Cloud framework and YugabyteDB.
 
 The project comes with two microservices that support various REST API endpoints for client requests:
+
 1. The Kitchen service (see the `kitchen` directory) - allows customers to order pizza.
 2. The Tracker service (see the `tracker` directory) - lets customers check their order status.
 
@@ -16,9 +17,10 @@ YugabyteDB is a database that can scale horizontally, withstand various outages,
 
 ## Starting YugabyteDB
 
-You can use a YugabyteDB deployment option that works best for you. 
+You can use a YugabyteDB deployment option that works best for you.
 
 Configure the following environment variables that are used in the `docker-compose.yaml` during the start of microservice instances:
+
 * `DB_URL` - the database connection URL in the `jdbc:postgresql://{HOSTNAME}:5433/yugabyte` format.
 * `DB_USER` - a user name to connect with.
 * `DB_PASSWORD` - the password.
@@ -36,6 +38,7 @@ If you'd like to use a geo-partitioned YugabyteDB cluster, then the pizza store 
 You can start a [geo-partitioned cluster using YugabyteDB Managed](https://docs.yugabyte.com/preview/yugabyte-cloud/cloud-basics/create-clusters/create-clusters-geopartition/). The geo-partitioned schema (see `schema/pizza_store_geo_distributed.sql`) is pre-configured for Google Cloud Platform (`gcp`) and the following regions - `us-east4`, `europe-west3` and `australia-southeast1`. You either need to start a YugabyteDB Managed instance with the same configuration or adjust the application schema file with your cloud provider and regions.
 
 Alternatively, you can start the cluster locally using the [yugabyted](https://docs.yugabyte.com/preview/reference/configuration/yugabyted/) tool:
+
 ```shell
 mkdir $HOME/yugabyte
 
@@ -65,10 +68,28 @@ Once the cluster is ready, use the contents of the `schema/pizza_store_geo_distr
 
 The application conveniently starts in containers using Docker Compose.
 
+If you don't have any particular database instance for testing, then start Postgres in docker. By default, the application connects an instance of Postgres running in docker (see the `docker-compose.yaml`):
+
+```shell
+docker network create pizza-network
+
+rm -R ~/postgresql_data/
+mkdir ~/postgresql_data/
+
+docker run --name postgresql --net pizza-network \
+    -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=password \
+    -p 5432:5432 \
+    -v ~/postgresql_data/:/var/lib/postgresql/data -d postgres:latest
+```
+
+Start the application:
+
 1. Navigate to the root directory of the project and start the app:
+
     ```shell
     docker compose up --build
     ```
+
     Note, the `--build` command is needed only during the first start or whenever you update the application source code.
 
 2. Confirm there are no errors in the logs and open the Discovery Service dashboard (`localhost:8761`) to make sure all the services have been registered:
@@ -76,40 +97,51 @@ The application conveniently starts in containers using Docker Compose.
 
 ## Sending Requests Via Cloud Gateway
 
-Now you can use the [HTTPie tool](https://httpie.io) to send REST requests via the running Spring Cloud Gateway Instance. The gateway routes are configured in the `api-gateway/.../ApiGatewayApplication.java` file. 
+Now you can use the [HTTPie tool](https://httpie.io) to send REST requests via the running Spring Cloud Gateway Instance. The gateway routes are configured in the `api-gateway/.../ApiGatewayApplication.java` file.
 
 Requests to the Kitchen microservice:
+
 * Put new pizza orders in:
+
     ```shell
     http POST localhost:8080/kitchen/order id=={ID} location=={LOCATION}
     ```
+
     where:
-    * `ID` - an order integer id.
-    * `LOCATION` - one of the following - `NewYork`, `Berlin` and `Sydney`
+  * `ID` - an order integer id.
+  * `LOCATION` - one of the following - `NewYork`, `Berlin` and `Sydney`
 
 * Update order status:
+
     ```shell
     http PUT localhost:8080/kitchen/order id=={ID} status=={STATUS} [location=={LOCATION}]
     ```
+
     where:
-    * `ID` - an order id.
-    * `STATUS` - one of the following - `Ordered`, `Baking`, `Delivering` and `YummyInMyTummy`.
-    * `LOCATION`(optional) - used for geo-partitioned deployments to avoid global transactions. Accepts one of the following - `NewYork`, `Berlin`, and `Sydney`.
-    
+  * `ID` - an order id.
+  * `STATUS` - one of the following - `Ordered`, `Baking`, `Delivering` and `YummyInMyTummy`.
+  * `LOCATION`(optional) - used for geo-partitioned deployments to avoid global transactions. Accepts one of the following - `NewYork`, `Berlin`, and `Sydney`.
+
 * Delete all orders:
+
     ```shell
     http DELETE localhost:8080/kitchen/orders
     ```
 
 Requests to the Tracker microservice:
+
 * Get an order status:
+
     ```shell
     http GET localhost:8080/tracker/order id=={ID} [location=={LOCATION}]
     ```
-    * `ID` - an order id.
-    * `LOCATION`(optional) - used for geo-partitioned deployments to avoid global transactions. Accepts one of the following - `NewYork`, `Berlin`, and `Sydney`.
+
+  * `ID` - an order id.
+  * `LOCATION`(optional) - used for geo-partitioned deployments to avoid global transactions. Accepts one of the following - `NewYork`, `Berlin`, and `Sydney`.
 * Get all orders status:
+
     ```shell
     http GET localhost:8080/tracker/orders [location=={LOCATION}]
     ```
-    * `LOCATION`(optional) - used for geo-partitioned deployments to avoid global transactions. Accepts one of the following - `NewYork`, `Berlin`, and `Sydney`.
+
+  * `LOCATION`(optional) - used for geo-partitioned deployments to avoid global transactions. Accepts one of the following - `NewYork`, `Berlin`, and `Sydney`.

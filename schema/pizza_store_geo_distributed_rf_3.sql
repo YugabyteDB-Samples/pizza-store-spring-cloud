@@ -18,9 +18,9 @@ CREATE CAST (varchar AS store_location) WITH INOUT AS IMPLICIT;
 
 CREATE TABLESPACE usa_ts WITH (
     replica_placement = '{"num_replicas": 3, "placement_blocks":
-  [{"cloud":"gcp","region":"us-east4","zone":"us-east4-a","min_num_replicas":1},
-  {"cloud":"gcp","region":"us-east4","zone":"us-east4-b","min_num_replicas":1},
-  {"cloud":"gcp","region":"us-east4","zone":"us-east4-c","min_num_replicas":1}
+  [{"cloud":"gcp","region":"us-east1","zone":"us-east1-c","min_num_replicas":1},
+  {"cloud":"gcp","region":"us-east1","zone":"us-east1-b","min_num_replicas":1},
+  {"cloud":"gcp","region":"us-east1","zone":"us-east1-d","min_num_replicas":1}
   ]}'
 );
 

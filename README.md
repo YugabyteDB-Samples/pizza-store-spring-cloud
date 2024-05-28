@@ -82,6 +82,12 @@ docker run --name postgresql --net pizza-network \
     -v ~/postgresql_data/:/var/lib/postgresql/data -d postgres:latest
 ```
 
+and load the schema:
+
+```shell
+psql -h 127.0.0.1 -U postgres -f {PATH_TO_PROJECT}/pizza-store-spring-cloud/schema/pizza_store.sql
+```
+
 Start the application:
 
 1. Navigate to the root directory of the project and start the app:
